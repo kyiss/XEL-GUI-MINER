@@ -12,17 +12,21 @@ namespace launcher
 
 {
     public partial class Form1 : Form
+       
     {
-        private static string[] MiningURL = { "testnet-01.xel.org:16876", "testnet-02.xel.org:16876" };
+        PerformanceCounter perfCPUCounter = new PerformanceCounter("Processor Information", "% Processor Time", "_Total"); // get CPU usage % 
 
-        private static string[] Executables = { "xel_miner.exe" };
+        private bool _dragging = false;
+        private Point _start_point = new Point(0, 0);
+
+        private static string[] MiningURL = { "localhost:17876", " node-03.xel.org:17876", "tnode-04.xel.org:17876", "testnet-06.xel.org:16876", "testnet-01.xel.org:16876", "testnet-02.xel.org:16876" }; // Nodes to connect miner 
+
+        private static string[] Executables = { "xel_miner.exe" }; // Launch miner 
 
         private static Process CPUMiner;
         private static Timer T;
         private static Boolean FirstTime;
 
-        int mouseX = 0, mouseY = 0;
-        bool mouseDown;
 
         public Form1()
         {
@@ -37,7 +41,6 @@ namespace launcher
             FirstTime = false;
 
             comboBox1.SelectedIndex = Config.ConfigData.Location;
-            textBox1.Text = Config.ConfigData.XelAddress;
             textBox2.Text = Config.ConfigData.WorkerName;
             comboBox2.SelectedIndex = Config.ConfigData.Extension;
             numericUpDown1.Value = Config.ConfigData.Threads;
@@ -66,14 +69,12 @@ namespace launcher
             button1.Update();
 
             string Worker = textBox2.Text.Trim();
-            if (Worker.Length > 0)
-                Worker = textBox1.Text.Trim() + "  " + Worker;
-            else
-                Worker = textBox1.Text.Trim();
+
 
             string FileName = "" + Executables[comboBox2.SelectedIndex];
 
-            string CommandLine = "-o " + MiningURL[comboBox1.SelectedIndex] + " -P" + Worker + " -t " + numericUpDown1.Value.ToString();
+            string CommandLine = "-o " + MiningURL[comboBox1.SelectedIndex] + " -P" + Worker + " -t " + numericUpDown1.Value.ToString(); // miner launcher with commands ./xel_miner.exe -o <node> -P "<secret_phrase>" -t <num_threads>
+
 
             CPUMiner = Process.Start(FileName, CommandLine);
             CPUMiner.EnableRaisingEvents = true;
@@ -134,10 +135,6 @@ namespace launcher
 
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -179,36 +176,103 @@ namespace launcher
 
         }
 
-        private void linkLabel3_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+           
+        }
+
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox2_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel8_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            _dragging = true;
+            _start_point = new Point(e.X, e.Y);
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_dragging)
+            {
+                Point p = PointToScreen(e.Location);
+                Location = new Point(p.X - this._start_point.X, p.Y - this._start_point.Y);
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            _dragging = false;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            label4.Text = "CPU :" + " " + (int)perfCPUCounter.NextValue() + " " + "%";
+        }
+
+        private void button4_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/tieandsuit/XEL-GUI-MINER");
         }
 
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        private void button5_Click(object sender, EventArgs e)
         {
-            if (mouseDown)
-            {
-                mouseX = MousePosition.X - 200; // This way we have the mouse closer to the middle of the window
-                mouseY = MousePosition.Y - 40;
+            System.Diagnostics.Process.Start("https://twitter.com/xel_community");
+       
+        }
 
-                this.SetDesktopLocation(mouseX, mouseY);
-            }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://t.co/wC1slvsmAB?amp=1");
+       
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
 
         }
 
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        private void label6_Click(object sender, EventArgs e)
         {
-            mouseDown = false; 
+
         }
 
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void button6_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://wiki.xel.org/support-wiki");
-        }
 
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            
         }
     }
 }
